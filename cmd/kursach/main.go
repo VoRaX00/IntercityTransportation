@@ -18,6 +18,11 @@ const (
 	envProd  = "prod"
 )
 
+// @Title KursachDB API
+// @Version 1.0
+// @Description API for kursach
+// @Host localhost:7080
+// @BasePath /
 func main() {
 	if err := godotenv.Load(); err != nil {
 		panic("Error loading .env file")
