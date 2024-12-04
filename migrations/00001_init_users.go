@@ -14,7 +14,7 @@ func UpUsers(ctx context.Context, tx *sql.Tx) error {
 	query := `CREATE TABLE IF NOT EXISTS users (
     	id SERIAL PRIMARY KEY,
     	fio TEXT NOT NULL,
-    	birthday DATE NOT NULL,
+    	birthday DATE NOT NULL
 	);`
 	_, err := tx.ExecContext(ctx, query)
 	return err
