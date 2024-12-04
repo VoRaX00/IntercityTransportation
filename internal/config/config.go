@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/ilyakaznacheev/cleanenv"
 	"os"
+	"time"
 )
 
 type Config struct {
@@ -13,8 +14,8 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	Host string `yaml:"host" env-required:"true"`
-	Port int    `yaml:"port" env-required:"true"`
+	Port    int           `yaml:"port" env-required:"true"`
+	Timeout time.Duration `yaml:"timeout" env-required:"true"`
 }
 
 type DBConfig struct {
