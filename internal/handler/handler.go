@@ -21,9 +21,43 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	router.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	api := router.Group("/api")
+	auth := router.Group("/auth")
 	{
-		api.GET("/ping", func(c *gin.Context) {})
+		auth.POST("/sign-in", h.SignIn)
+		auth.POST("/sign-up", h.SignUp)
+		auth.POST("/refresh-tokens", h.RefreshToken)
+	}
+
+	api := router.Group("/api")
+
+	transport := api.Group("/transactions")
+	{
+		transport.POST("/add", h.AddTransport)
+		transport.PUT("/update", h.UpdateTransport)
+		transport.PATCH("/update", h.UpdatePartialTransport)
+		transport.DELETE("/delete", h.DeleteTransport)
+		transport.GET("/", h.GetAllTransport)
+	}
+
+	schedule := api.Group("/schedule")
+	{
+		schedule.POST("/add", h.AddSchedule)
+		schedule.DELETE("/delete", h.DeleteSchedule)
+		schedule.GET("/", h.GetAllSchedule)
+	}
+
+	place := api.Group("/place")
+	{
+		place.POST("/add", h.AddPlace)
+		place.DELETE("/delete", h.DeletePlace)
+		place.GET("/", h.GetAllPlaces)
+	}
+
+	ticket := api.Group("/ticket")
+	{
+		ticket.POST("/buy", h.BuyTicket)
+		ticket.DELETE("remove-ticket", h.RemoveTicket)
+		ticket.GET("/", h.GetAllTickets)
 	}
 	return router
 }
