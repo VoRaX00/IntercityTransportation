@@ -2,6 +2,10 @@ package handler
 
 import "github.com/gin-gonic/gin"
 
+type Ticket interface {
+	// TODO: Объявить необходимые методы
+}
+
 // @Summary BuyTicket
 // @Tags ticket
 // @Description Buy ticket

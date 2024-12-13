@@ -1,6 +1,15 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"kursachDB/internal/services"
+)
+
+type Auth interface {
+	SignIn(login services.UserLogin) (services.Tokens, error)
+	SignUp(register services.UserRegister) (int, error)
+	RefreshTokens(tokens services.Tokens) (services.Tokens, error)
+}
 
 // @Summary SignIn
 // @Tags auth

@@ -1,6 +1,16 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"kursachDB/internal/domain/models"
+	"kursachDB/internal/services"
+)
+
+type Place interface {
+	Add(place services.AddPlace) error
+	Delete(id string) error
+	GetAll() []models.Place
+}
 
 // @Summary AddPlace
 // @Tags place

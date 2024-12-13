@@ -1,6 +1,16 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"kursachDB/internal/domain/models"
+	"kursachDB/internal/services"
+)
+
+type Schedule interface {
+	Add(schedule services.AddSchedule) error
+	Delete(id string) error
+	GetAll() []models.Schedule
+}
 
 // @Summary AddSchedule
 // @Tags schedule

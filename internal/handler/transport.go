@@ -1,6 +1,17 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"kursachDB/internal/domain/models"
+	"kursachDB/internal/services"
+)
+
+type Transport interface {
+	Add(transport services.AddTransport) error
+	Update(transport services.AddTransport) error
+	Delete(stateNumber string) error
+	GetAll() []models.Transport
+}
 
 // @Summary AddTransport
 // @Tags transport
