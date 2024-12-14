@@ -1,9 +1,10 @@
 package handler
 
 type Service struct {
-	Place    Place
-	Schedule Schedule
-	Auth     Auth
+	Auth      Auth
+	Place     Place
+	Schedule  Schedule
+	Transport Transport
 }
 
 func NewService() *Service {
