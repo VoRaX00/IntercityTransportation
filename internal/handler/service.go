@@ -1,7 +1,8 @@
 package handler
 
 type Service struct {
-	Place Place
+	Place    Place
+	Schedule Schedule
 }
 
 func NewService() *Service {
