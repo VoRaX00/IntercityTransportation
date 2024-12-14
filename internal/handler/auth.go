@@ -2,7 +2,9 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"kursachDB/internal/handler/responses"
 	"kursachDB/internal/services"
+	"net/http"
 )
 
 type Auth interface {
@@ -19,7 +21,18 @@ type Auth interface {
 // @Produce json
 // @Router /auth/sign-in [post]
 func (h *Handler) SignIn(ctx *gin.Context) {
-	panic("implement me")
+	var input services.UserLogin
+	if err := ctx.ShouldBind(&input); err != nil {
+		responses.NewErrorResponse(ctx, http.StatusBadRequest, ErrInvalidArguments)
+		return
+	}
+
+	tokens, err := h.services.Auth.SignIn(input)
+	if err != nil {
+		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
+	}
+
+	ctx.JSON(http.StatusOK, tokens)
 }
 
 // @Summary SignUp
@@ -30,7 +43,23 @@ func (h *Handler) SignIn(ctx *gin.Context) {
 // @Produce json
 // @Router /auth/sign-up [post]
 func (h *Handler) SignUp(ctx *gin.Context) {
-	panic("implement me")
+	var input services.UserRegister
+	if err := ctx.ShouldBind(&input); err != nil {
+		responses.NewErrorResponse(ctx, http.StatusBadRequest, ErrInvalidArguments)
+		return
+	}
+
+	id, err := h.services.Auth.SignUp(input)
+	if err != nil {
+		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
+		return
+	}
+
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"id": id,
+		},
+	)
 }
 
 // @Summary RefreshToken
@@ -41,5 +70,17 @@ func (h *Handler) SignUp(ctx *gin.Context) {
 // @Produce json
 // @Router /auth/refresh-tokens [put]
 func (h *Handler) RefreshTokens(ctx *gin.Context) {
-	panic("implement me")
+	var input services.Tokens
+	if err := ctx.ShouldBind(&input); err != nil {
+		responses.NewErrorResponse(ctx, http.StatusBadRequest, ErrInvalidArguments)
+		return
+	}
+
+	tokens, err := h.services.Auth.RefreshTokens(input)
+	if err != nil {
+		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, tokens)
 }
