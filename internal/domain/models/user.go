@@ -1,8 +1,6 @@
 package models
 
 type User struct {
-	Id         int64  `json:"id"`
-	Lastname   string `json:"lastname"`
-	Firstname  string `json:"firstname"`
-	Patronymic string `json:"patronymic"`
+	PhoneNumber int64  `json:"phoneNumber" db:"phone_number"`
+	FIO         string `json:"fio" db:"fio"`
 }

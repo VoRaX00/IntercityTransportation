@@ -1,8 +1,6 @@
 package models
 
 type Transport struct {
-	Model       string        `json:"model"`
-	StateNumber string        `json:"stateNumber"`
-	Type        TypeTransport `json:"type"`
-	CountSeats  int           `json:"countSeats"`
+	StateNumber string `json:"stateNumber" db:"state_number"`
+	Model       Model  `json:"model" db:"model"`
 }
