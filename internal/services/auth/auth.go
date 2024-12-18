@@ -5,6 +5,10 @@ import (
 	"log/slog"
 )
 
+type Repo interface {
+	AddUser(user services.UserRegister) error
+}
+
 type Auth struct {
 	log  *slog.Logger
 	repo Repo

@@ -2,7 +2,10 @@ package handler
 
 import (
 	"kursachDB/internal/services/auth"
+	"kursachDB/internal/services/place"
+	"kursachDB/internal/services/schedule"
 	"kursachDB/internal/services/ticket"
+	"kursachDB/internal/services/transport"
 	"kursachDB/internal/storage"
 	"log/slog"
 )
@@ -17,7 +20,10 @@ type Service struct {
 
 func NewService(log *slog.Logger, repos *storage.Storage) *Service {
 	return &Service{
-		Auth:   auth.New(log, repos.Auth),
-		Ticket: ticket.New(log, repos.Ticket),
+		Auth:      auth.New(log, repos.Auth),
+		Place:     place.New(log, repos),
+		Schedule:  schedule.New(log, repos),
+		Transport: transport.New(log, repos),
+		Ticket:    ticket.New(log, repos.Ticket),
 	}
 }
