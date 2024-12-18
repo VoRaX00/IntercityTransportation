@@ -3,21 +3,13 @@ package services
 import "time"
 
 type UserRegister struct {
-	Email        string `json:"email"`
-	Lastname     string `json:"lastname"`
-	Firstname    string `json:"firstname"`
-	Patronymic   string `json:"patronymic"`
-	PasswordHash string `json:"password"`
+	PhoneNumber string `json:"phoneNumber"`
+	FIO         string `json:"fio"`
 }
 
 type UserLogin struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-type Tokens struct {
-	AccessToken  string `json:"accessToken"`
-	RefreshToken string `json:"refreshToken"`
+	PhoneNumber string `json:"phoneNumber"`
+	FIO         string `json:"fio"`
 }
 
 type AddPlace struct {
@@ -26,16 +18,14 @@ type AddPlace struct {
 }
 
 type AddSchedule struct {
-	From          string    `json:"from"`
-	To            string    `json:"to"`
-	Departure     time.Time `json:"departure"`
-	Arrival       time.Time `json:"arrival"`
-	VehicleNumber string    `json:"vehicleNumber"`
+	From        string    `json:"from"`
+	To          string    `json:"to"`
+	Departure   time.Time `json:"departure"`
+	Arrival     time.Time `json:"arrival"`
+	StateNumber string    `json:"stateNumber"`
 }
 
 type AddTransport struct {
-	Model       string `json:"model"`
 	StateNumber string `json:"stateNumber"`
-	Type        string `json:"type"`
-	CountSeats  int    `json:"countSeats"`
+	Model       string `json:"model"`
 }
