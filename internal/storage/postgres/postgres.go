@@ -1,9 +1,15 @@
 package postgres
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/jmoiron/sqlx"
+	authrepo "kursachDB/internal/storage/auth"
+	ticketrepo "kursachDB/internal/storage/ticket"
+)
 
 type Storage struct {
-	db *sqlx.DB
+	db     *sqlx.DB
+	Auth   *authrepo.Auth
+	Ticket *ticketrepo.Ticket
 }
 
 func New(storagePath string) (*Storage, error) {
@@ -13,7 +19,9 @@ func New(storagePath string) (*Storage, error) {
 	}
 
 	return &Storage{
-		db: db,
+		db:     db,
+		Auth:   authrepo.New(db),
+		Ticket: ticketrepo.New(db),
 	}, nil
 }
 

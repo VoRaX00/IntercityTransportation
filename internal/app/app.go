@@ -21,7 +21,7 @@ func New(log *slog.Logger, storagePath string, serverConfig config.ServerConfig)
 		panic(err)
 	}
 
-	service := handler.NewService()
+	service := handler.NewService(log, storage)
 	handlers := handler.NewHandler(service)
 	serv := server.New(log, serverConfig.Port, serverConfig.Timeout, handlers.InitRoutes())
 

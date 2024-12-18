@@ -6,7 +6,7 @@ import (
 	"kursachDB/internal/services/schedule"
 	"kursachDB/internal/services/ticket"
 	"kursachDB/internal/services/transport"
-	"kursachDB/internal/storage"
+	"kursachDB/internal/storage/postgres"
 	"log/slog"
 )
 
@@ -18,7 +18,7 @@ type Service struct {
 	Ticket    Ticket
 }
 
-func NewService(log *slog.Logger, repos *storage.Storage) *Service {
+func NewService(log *slog.Logger, repos *postgres.Storage) *Service {
 	return &Service{
 		Auth:      auth.New(log, repos.Auth),
 		Place:     place.New(log, repos),
