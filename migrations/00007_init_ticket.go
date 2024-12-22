@@ -14,7 +14,7 @@ func UpTicket(ctx context.Context, tx *sql.Tx) error {
 	query := `CREATE TABLE IF NOT EXISTS tickets (
     	id SERIAL PRIMARY KEY,
     	cost INTEGER NOT NULL,
-    	state_number TEXT REFERENCES transport(state_number) NOT NULL
+    	phone_number INTEGER REFERENCES users(phone_number) NOT NULL
 	);`
 
 	_, err := tx.ExecContext(ctx, query)

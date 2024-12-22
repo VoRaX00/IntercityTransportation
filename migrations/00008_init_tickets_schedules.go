@@ -11,9 +11,9 @@ func init() {
 }
 
 func UpTicketsSchedules(ctx context.Context, tx *sql.Tx) error {
-	query := `CREATE TABLE IF NOT EXISTS tickets_schedules (
+	query := `CREATE TABLE IF NOT EXISTS tickets_flights (
     	ticket_id INTEGER REFERENCES tickets(id) ON DELETE CASCADE,
-    	schedule_id INTEGER REFERENCES schedules(id) ON DELETE CASCADE
+    	schedule_id INTEGER REFERENCES flights(id) ON DELETE CASCADE
 	);`
 
 	_, err := tx.ExecContext(ctx, query)
@@ -21,7 +21,7 @@ func UpTicketsSchedules(ctx context.Context, tx *sql.Tx) error {
 }
 
 func DownTicketsSchedules(ctx context.Context, tx *sql.Tx) error {
-	query := `DROP TABLE IF EXISTS tickets_schedules`
+	query := `DROP TABLE IF EXISTS tickets_flights`
 	_, err := tx.ExecContext(ctx, query)
 	return err
 }

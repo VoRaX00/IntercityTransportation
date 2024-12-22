@@ -14,7 +14,7 @@ func UpPlaces(ctx context.Context, tx *sql.Tx) error {
 	query := `CREATE TABLE IF NOT EXISTS places(
     	id SERIAL PRIMARY KEY,
     	name_place TEXT NOT NULL,
-    	type_id INTEGER REFERENCES type_places(id) NOT NULL
+    	type_id INTEGER REFERENCES types_places(id) NOT NULL
 	);`
 
 	_, err := tx.ExecContext(ctx, query)

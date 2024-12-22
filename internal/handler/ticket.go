@@ -1,9 +1,15 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"kursachDB/internal/domain/models"
+)
 
 type Ticket interface {
-	// TODO: Объявить необходимые методы
+	Create() error
+	Update() error
+	GetAll() ([]models.Ticket, error)
+	GetByUser() ([]models.Ticket, error)
 }
 
 // @Summary BuyTicket

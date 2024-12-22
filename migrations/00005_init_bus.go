@@ -11,7 +11,7 @@ func init() {
 }
 
 func UpTransport(ctx context.Context, tx *sql.Tx) error {
-	query := `CREATE TABLE IF NOT EXISTS transport (
+	query := `CREATE TABLE IF NOT EXISTS buses (
     	state_number VARCHAR(10) PRIMARY KEY,
     	model TEXT REFERENCES models(model) NOT NULL
 	);`
@@ -21,7 +21,7 @@ func UpTransport(ctx context.Context, tx *sql.Tx) error {
 }
 
 func DownTransport(ctx context.Context, tx *sql.Tx) error {
-	query := `DROP TABLE IF EXISTS transport;`
+	query := `DROP TABLE IF EXISTS buses;`
 	_, err := tx.ExecContext(ctx, query)
 	return err
 }

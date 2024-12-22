@@ -6,7 +6,9 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
+	_ "kursachDB/migrations" // Подключение пакета с миграциями
 	"os"
 )
 
@@ -20,11 +22,10 @@ type Config struct {
 }
 
 func main() {
-	cfg := MustLoad()
-
 	if err := godotenv.Load(".env"); err != nil {
 		panic(err)
 	}
+	cfg := MustLoad()
 
 	db, err := sqlx.Open("postgres",
 		fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
@@ -35,8 +36,7 @@ func main() {
 	}
 
 	var migrationsPath string
-
-	flag.StringVar(&migrationsPath, "migration-path", "", "path to migrations folder")
+	flag.StringVar(&migrationsPath, "migration-path", "migrations", "path to migrations folder")
 	flag.Parse()
 
 	if cfg.IsDrop {
@@ -68,13 +68,6 @@ func MustLoad() *Config {
 }
 
 func fetchConfigPath() string {
-	var res string
-
-	flag.StringVar(&res, "config", "", "config path")
-	flag.Parse()
-
-	if res == "" {
-		res = os.Getenv("CONFIG_MIGRATION_PATH")
-	}
+	res := os.Getenv("CONFIG_MIGRATION_PATH")
 	return res
 }
