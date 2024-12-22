@@ -2,11 +2,11 @@ package models
 
 import "time"
 
-type Schedule struct {
+type Flight struct {
 	Id        int64     `json:"id" db:"id"`
-	From      Place     `json:"from" db:"from"`
-	To        Place     `json:"to" db:"to"`
+	From      Place     `json:"from" db:"places"`
+	To        Place     `json:"to" db:"places"`
 	Departure time.Time `json:"departure" db:"departure"`
 	Arrival   time.Time `json:"arrival" db:"arrival"`
-	Vehicle   Transport `json:"vehicle" db:"state_number"`
+	Bus       Bus       `json:"bus" db:"buses"`
 }
