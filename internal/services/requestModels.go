@@ -17,7 +17,7 @@ type AddPlace struct {
 	Type string `json:"type"`
 }
 
-type AddSchedule struct {
+type AddFlight struct {
 	From        string    `json:"from"`
 	To          string    `json:"to"`
 	Departure   time.Time `json:"departure"`
@@ -25,7 +25,7 @@ type AddSchedule struct {
 	StateNumber string    `json:"stateNumber"`
 }
 
-type AddTransport struct {
+type AddBus struct {
 	StateNumber string `json:"stateNumber"`
 	Model       string `json:"model"`
 }

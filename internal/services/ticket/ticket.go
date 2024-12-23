@@ -1,6 +1,9 @@
 package ticket
 
-import "log/slog"
+import (
+	"kursachDB/internal/domain/models"
+	"log/slog"
+)
 
 type Repo interface {
 }
@@ -15,4 +18,22 @@ func New(log *slog.Logger, repo Repo) *Ticket {
 		log:  log,
 		repo: repo,
 	}
+}
+
+func (t *Ticket) Create() error {
+	return nil
+}
+
+func (t *Ticket) Update() error {
+	return nil
+}
+
+func (t *Ticket) Delete() {
+}
+
+func (t *Ticket) GetAll() ([]models.Ticket, error) {
+	return nil, nil
+}
+func (t *Ticket) GetByUser() ([]models.Ticket, error) {
+	return nil, nil
 }

@@ -28,20 +28,20 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	api := router.Group("/api")
 
-	transport := api.Group("/transactions")
+	transport := api.Group("/bus")
 	{
-		transport.POST("/add", h.AddTransport)
-		transport.PUT("/update", h.UpdateTransport)
-		transport.PATCH("/update", h.UpdatePartialTransport)
-		transport.DELETE("/delete", h.DeleteTransport)
-		transport.GET("/", h.GetAllTransport)
+		transport.POST("/add", h.AddBus)
+		transport.PUT("/update", h.UpdateBus)
+		transport.PATCH("/update", h.UpdatePartialBus)
+		transport.DELETE("/delete", h.DeleteBus)
+		transport.GET("/", h.GetAllBus)
 	}
 
-	schedule := api.Group("/schedule")
+	schedule := api.Group("/flight")
 	{
-		schedule.POST("/add", h.AddSchedule)
-		schedule.DELETE("/delete", h.DeleteSchedule)
-		schedule.GET("/", h.GetAllSchedule)
+		schedule.POST("/add", h.AddFlight)
+		schedule.DELETE("/delete", h.DeleteFlight)
+		schedule.GET("/", h.GetAllFlight)
 	}
 
 	place := api.Group("/place")
