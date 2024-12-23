@@ -1,12 +1,17 @@
 package bus
 
 import (
+	"fmt"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/services"
 	"log/slog"
 )
 
-type Repo interface{}
+type Repo interface {
+	Add(bus models.Bus) error
+	Delete(stateNumber string) error
+	GetAll() ([]models.Bus, error)
+}
 
 type Bus struct {
 	log  *slog.Logger
@@ -21,17 +26,54 @@ func New(log *slog.Logger, repo Repo) *Bus {
 }
 
 func (s *Bus) Add(bus services.AddBus) error {
-	panic("implement me")
-}
+	const op = "bus.Add"
+	log := s.log.With(
+		slog.String("op", op),
+	)
 
-func (s *Bus) Update(bus services.AddBus) error {
-	panic("implement me")
+	param := models.Bus{
+		StateNumber: bus.StateNumber,
+		Model: models.Model{
+			Model: bus.Model,
+		},
+	}
+
+	log.Info("starting add bus")
+	err := s.repo.Add(param)
+	if err != nil {
+		log.Error(err.Error())
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	log.Info("success add bus")
+	return nil
 }
 
 func (s *Bus) Delete(stateNumber string) error {
-	panic("implement me")
+	const op = "bus.Delete"
+	log := s.log.With(
+		slog.String("op", op),
+	)
+
+	log.Info("starting deleting bus")
+	err := s.repo.Delete(stateNumber)
+	if err != nil {
+		log.Error(err.Error())
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	log.Info("success deleted bus")
+	return nil
 }
 
-func (s *Bus) GetAll() []models.Bus {
-	panic("implement me")
+func (s *Bus) GetAll() ([]models.Bus, error) {
+	const op = "bus.GetAll"
+	log := s.log.With(slog.String("op", op))
+
+	log.Info("fetching all bus")
+	buses, err := s.repo.GetAll()
+	if err != nil {
+		log.Error(err.Error())
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	log.Info("returning all bus")
+	return buses, nil
 }

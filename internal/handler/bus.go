@@ -9,10 +9,9 @@ import (
 )
 
 type Bus interface {
-	Add(transport services.AddBus) error
-	Update(transport services.AddBus) error
+	Add(bus services.AddBus) error
 	Delete(stateNumber string) error
-	GetAll() []models.Bus
+	GetAll() ([]models.Bus, error)
 }
 
 // @Summary AddBus
@@ -45,28 +44,6 @@ func validateAddBus(bus services.AddBus) error {
 	panic("implement me")
 }
 
-// @Summary UpdateBus
-// @Tags bus
-// @Description Update bus
-// @ID update-bus
-// @Accept json
-// @Produce json
-// @Router /api/bus/update [put]
-func (h *Handler) UpdateBus(ctx *gin.Context) {
-	panic("implement me")
-}
-
-// @Summary UpdatePartialBus
-// @Tags bus
-// @Description Update partial bus
-// @ID update-partial-bus
-// @Accept json
-// @Produce json
-// @Router /api/bus/update [patch]
-func (h *Handler) UpdatePartialBus(ctx *gin.Context) {
-	panic("implement me")
-}
-
 // @Summary DeleteBus
 // @Tags bus
 // @ID delete-bus
@@ -94,6 +71,10 @@ func (h *Handler) DeleteBus(ctx *gin.Context) {
 // @Produce json
 // @Router /api/bus/ [get]
 func (h *Handler) GetAllBus(ctx *gin.Context) {
-	res := h.services.Bus.GetAll()
-	ctx.JSON(http.StatusOK, res)
+	buses, err := h.services.Bus.GetAll()
+	if err != nil {
+		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInvalidArguments)
+		return
+	}
+	ctx.JSON(http.StatusOK, buses)
 }
