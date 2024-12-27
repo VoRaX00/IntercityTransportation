@@ -21,9 +21,9 @@ type Service struct {
 func NewService(log *slog.Logger, repos *postgres.Storage) *Service {
 	return &Service{
 		Auth:   auth.New(log, repos.Auth),
-		Place:  place.New(log, repos),
+		Bus:    bus.New(log, repos.Bus),
 		Flight: flight.New(log, repos),
-		Bus:    bus.New(log, repos),
+		Place:  place.New(log, repos.Place),
 		Ticket: ticket.New(log, repos.Ticket),
 	}
 }
