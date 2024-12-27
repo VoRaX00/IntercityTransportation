@@ -1,7 +1,7 @@
 package services
 
 type UserLogin struct {
-	PhoneNumber string `json:"phoneNumber"`
+	PhoneNumber int64  `json:"phoneNumber"`
 	FIO         string `json:"fio"`
 }
 
@@ -21,4 +21,10 @@ type AddFlight struct {
 type AddBus struct {
 	StateNumber string `json:"stateNumber"`
 	Model       string `json:"model"`
+}
+
+type BuyTicket struct {
+	Cost        int64   `json:"cost"`
+	Flights     []int64 `json:"flights"`
+	PhoneNumber int64   `json:"phoneNumber"`
 }

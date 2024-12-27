@@ -10,6 +10,8 @@ import (
 
 type Repo interface {
 	Add(flight models.Flight) error
+	Delete(id int) error
+	GetAll() ([]models.Flight, error)
 }
 
 type Flight struct {
@@ -39,7 +41,7 @@ func (s *Flight) Add(flight services.AddFlight) error {
 	log.Info("starting adding flight")
 	err = s.repo.Add(fl)
 	if err != nil {
-		log.Warn(err.Error())
+		log.Warn("error adding flight", err)
 		return fmt.Errorf("%s: %w", op, err)
 	}
 	log.Info("finishing adding flight")
@@ -48,9 +50,33 @@ func (s *Flight) Add(flight services.AddFlight) error {
 }
 
 func (s *Flight) Delete(id int) error {
-	panic("implement me")
+	const op = "Flight.Delete"
+	log := s.log.With(
+		slog.String("op", op),
+	)
+
+	log.Info("starting deleting flight")
+	err := s.repo.Delete(id)
+	if err != nil {
+		log.Warn("error deleting", err)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	log.Info("finishing deleting flight")
+	return nil
 }
 
 func (s *Flight) GetAll() ([]models.Flight, error) {
-	panic("implement me")
+	const op = "Flight.GetAll"
+	log := s.log.With(
+		slog.String("op", op),
+	)
+
+	log.Info("starting getting all flights")
+	flights, err := s.repo.GetAll()
+	if err != nil {
+		log.Warn("error getting all flights", err)
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	log.Info("finishing getting all flights")
+	return flights, nil
 }

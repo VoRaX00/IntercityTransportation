@@ -2,6 +2,7 @@ package ticket
 
 import (
 	"kursachDB/internal/domain/models"
+	"kursachDB/internal/services"
 	"log/slog"
 )
 
@@ -20,7 +21,14 @@ func New(log *slog.Logger, repo Repo) *Ticket {
 	}
 }
 
-func (t *Ticket) Create() error {
+func (s *Ticket) BuyTicket(ticket services.BuyTicket) error {
+	const op = "Ticket.Create"
+	log := s.log.With(
+		slog.String("op", op),
+	)
+
+	log.Info("start creating ticket")
+
 	return nil
 }
 
@@ -28,7 +36,8 @@ func (t *Ticket) Update() error {
 	return nil
 }
 
-func (t *Ticket) Delete() {
+func (t *Ticket) RemoveTicket(id int64) error {
+	panic("implement me")
 }
 
 func (t *Ticket) GetAll() ([]models.Ticket, error) {
