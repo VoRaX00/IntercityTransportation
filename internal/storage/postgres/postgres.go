@@ -2,8 +2,8 @@ package postgres
 
 import (
 	"github.com/jmoiron/sqlx"
-	authrepo "kursachDB/internal/storage/auth"
-	ticketrepo "kursachDB/internal/storage/ticket"
+	authrepo "kursachDB/internal/storage/postgres/auth"
+	ticketrepo "kursachDB/internal/storage/postgres/ticket"
 )
 
 type Storage struct {

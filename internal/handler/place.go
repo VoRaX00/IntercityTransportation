@@ -1,11 +1,14 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/handler/responses"
 	"kursachDB/internal/services"
 	"net/http"
+	"regexp"
 	"strconv"
 )
 
@@ -55,8 +58,22 @@ func (h *Handler) AddPlace(ctx *gin.Context) {
 	)
 }
 
+func validateCityName(fl validator.FieldLevel) bool {
+	regex := regexp.MustCompile(`^([А-ЯЁ][а-яё]*)([ -][А-ЯЁ][а-яё]*)*$`)
+	return regex.MatchString(fl.Field().String())
+}
+
 func validateAddPlace(place services.AddPlace) error {
-	panic("implement me")
+	valid := validator.New()
+	err := valid.RegisterValidation("city_name", validateCityName)
+	if err != nil {
+		return err
+	}
+
+	if valid.Struct(&place) != nil {
+		return fmt.Errorf("wrong name place")
+	}
+	return nil
 }
 
 // @Summary DeletePlace

@@ -6,7 +6,7 @@ type UserLogin struct {
 }
 
 type AddPlace struct {
-	Name string `json:"name"`
+	Name string `json:"name" validate:"required,city_name"`
 	Type string `json:"type"`
 }
 

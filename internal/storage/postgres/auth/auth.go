@@ -2,7 +2,7 @@ package auth
 
 import (
 	"github.com/jmoiron/sqlx"
-	"kursachDB/internal/services"
+	"kursachDB/internal/domain/models"
 )
 
 type Auth struct {
@@ -15,6 +15,6 @@ func New(db *sqlx.DB) *Auth {
 	}
 }
 
-func (s *Auth) AddUser(user services.UserRegister) error {
+func (s *Auth) Login(user models.User) error {
 	panic("implement me")
 }
