@@ -19,7 +19,7 @@ const (
 type Place interface {
 	Add(place services.AddPlace) error
 	Delete(id int) error
-	GetAll() []models.Place
+	GetAll() ([]models.Place, error)
 }
 
 // @Summary AddPlace
@@ -94,6 +94,11 @@ func (h *Handler) DeletePlace(ctx *gin.Context) {
 // @Produce json
 // @Router /api/place/ [get]
 func (h *Handler) GetAllPlaces(ctx *gin.Context) {
-	res := h.services.Place.GetAll()
+	res, err := h.services.Place.GetAll()
+	if err != nil {
+		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
+		return
+	}
+
 	ctx.JSON(http.StatusOK, res)
 }

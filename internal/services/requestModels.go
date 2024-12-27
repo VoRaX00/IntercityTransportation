@@ -1,12 +1,5 @@
 package services
 
-import "time"
-
-type UserRegister struct {
-	PhoneNumber string `json:"phoneNumber"`
-	FIO         string `json:"fio"`
-}
-
 type UserLogin struct {
 	PhoneNumber string `json:"phoneNumber"`
 	FIO         string `json:"fio"`
@@ -18,11 +11,11 @@ type AddPlace struct {
 }
 
 type AddFlight struct {
-	From        string    `json:"from"`
-	To          string    `json:"to"`
-	Departure   time.Time `json:"departure"`
-	Arrival     time.Time `json:"arrival"`
-	StateNumber string    `json:"stateNumber"`
+	From        string `json:"from"`
+	To          string `json:"to"`
+	Departure   string `json:"departure"`
+	Arrival     string `json:"arrival"`
+	StateNumber string `json:"stateNumber"`
 }
 
 type AddBus struct {

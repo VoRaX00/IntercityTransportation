@@ -41,7 +41,7 @@ func (s *Bus) Add(bus services.AddBus) error {
 	log.Info("starting add bus")
 	err := s.repo.Add(param)
 	if err != nil {
-		log.Error(err.Error())
+		log.Warn("error adding bus", err.Error())
 		return fmt.Errorf("%s: %w", op, err)
 	}
 	log.Info("success add bus")
@@ -57,7 +57,7 @@ func (s *Bus) Delete(stateNumber string) error {
 	log.Info("starting deleting bus")
 	err := s.repo.Delete(stateNumber)
 	if err != nil {
-		log.Error(err.Error())
+		log.Warn("error deleting bus", err.Error())
 		return fmt.Errorf("%s: %w", op, err)
 	}
 	log.Info("success deleted bus")
@@ -71,7 +71,7 @@ func (s *Bus) GetAll() ([]models.Bus, error) {
 	log.Info("fetching all bus")
 	buses, err := s.repo.GetAll()
 	if err != nil {
-		log.Error(err.Error())
+		log.Warn("error getting buses", err.Error())
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 	log.Info("returning all bus")

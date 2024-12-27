@@ -1,12 +1,13 @@
 package auth
 
 import (
-	"kursachDB/internal/services"
+	"fmt"
+	"kursachDB/internal/domain/models"
 	"log/slog"
 )
 
 type Repo interface {
-	AddUser(user services.UserRegister) error
+	Login(user models.User) error
 }
 
 type Auth struct {
@@ -21,6 +22,19 @@ func New(log *slog.Logger, repo Repo) *Auth {
 	}
 }
 
-func (s *Auth) SignIn(login services.UserLogin) error {
-	panic("implement me")
+func (s *Auth) SignIn(login models.User) error {
+	const op = "signIn"
+
+	log := s.log.With(
+		slog.String("op", op),
+	)
+
+	log.Info("login verification")
+	err := s.repo.Login(login)
+	if err != nil {
+		log.Warn("error login", err)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	log.Info("login verified")
+	return nil
 }

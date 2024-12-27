@@ -2,13 +2,13 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"kursachDB/internal/domain/models"
 	"kursachDB/internal/handler/responses"
-	"kursachDB/internal/services"
 	"net/http"
 )
 
 type Auth interface {
-	SignIn(login services.UserLogin) error
+	SignIn(user models.User) error
 }
 
 // @Summary SignIn
@@ -19,7 +19,7 @@ type Auth interface {
 // @Produce json
 // @Router /auth/sign-in [post]
 func (h *Handler) SignIn(ctx *gin.Context) {
-	var input services.UserLogin
+	var input models.User
 	if err := ctx.ShouldBind(&input); err != nil {
 		responses.NewErrorResponse(ctx, http.StatusBadRequest, ErrInvalidArguments)
 		return

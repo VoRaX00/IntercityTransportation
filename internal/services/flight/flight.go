@@ -28,6 +28,6 @@ func (s *Flight) Delete(id int) error {
 	panic("implement me")
 }
 
-func (s *Flight) GetAll() []models.Flight {
+func (s *Flight) GetAll() ([]models.Flight, error) {
 	panic("implement me")
 }

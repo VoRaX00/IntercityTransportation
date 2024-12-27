@@ -1,18 +1,20 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/handler/responses"
 	"kursachDB/internal/services"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type Flight interface {
-	Add(schedule services.AddFlight) error
+	Add(flight services.AddFlight) error
 	Delete(id int) error
-	GetAll() []models.Flight
+	GetAll() ([]models.Flight, error)
 }
 
 // @Summary AddFlight
@@ -46,8 +48,21 @@ func (h *Handler) AddFlight(ctx *gin.Context) {
 	)
 }
 
-func validateAddFlight(schedule services.AddFlight) error {
-	panic("implement me")
+func validateAddFlight(flight services.AddFlight) error {
+	departure, err := time.Parse("02.01.2006", flight.Departure)
+	if err != nil {
+		return fmt.Errorf("departure date format is wrong")
+	}
+
+	arrival, err := time.Parse("02.01.2006", flight.Arrival)
+	if err != nil {
+		return fmt.Errorf("arrival date format is wrong")
+	}
+
+	if departure.After(arrival) {
+		return fmt.Errorf("departure date is wrong")
+	}
+	return nil
 }
 
 // @Summary DeleteFlight
@@ -84,6 +99,11 @@ func (h *Handler) DeleteFlight(ctx *gin.Context) {
 // @Produce json
 // @Router /api/flight/ [get]
 func (h *Handler) GetAllFlight(ctx *gin.Context) {
-	res := h.services.Flight.GetAll()
+	res, err := h.services.Flight.GetAll()
+	if err != nil {
+		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
+		return
+	}
+
 	ctx.JSON(http.StatusOK, res)
 }

@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/handler/responses"
 	"kursachDB/internal/services"
 	"net/http"
+	"unicode/utf8"
 )
 
 type Bus interface {
@@ -41,7 +43,20 @@ func (h *Handler) AddBus(ctx *gin.Context) {
 }
 
 func validateAddBus(bus services.AddBus) error {
-	panic("implement me")
+	if utf8.RuneCountInString(bus.StateNumber) != 6 {
+		return fmt.Errorf("invalid state number")
+	}
+
+	for i, val := range bus.StateNumber {
+		if (i == 0 || i > 3) && (val < '0' || val > '9') {
+			return fmt.Errorf("invalid state number")
+		}
+
+		if i > 0 && i < 4 && (val < 'A' || val > 'Z') {
+			return fmt.Errorf("invalid state number")
+		}
+	}
+	return nil
 }
 
 // @Summary DeleteBus
