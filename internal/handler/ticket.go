@@ -12,9 +12,8 @@ import (
 type Ticket interface {
 	BuyTicket(ticket services.BuyTicket) error
 	RemoveTicket(id int64) error
-	Update() error
 	GetAll() ([]models.Ticket, error)
-	GetByUser() ([]models.Ticket, error)
+	GetByUser(userId int64) ([]models.Ticket, error)
 }
 
 // @Summary BuyTicket
@@ -75,5 +74,26 @@ func (h *Handler) RemoveTicket(ctx *gin.Context) {
 // @Produce json
 // @Router /api/ticket/ [get]
 func (h *Handler) GetAllTickets(ctx *gin.Context) {
-	panic("implement me")
+	res, err := h.services.Ticket.GetAll()
+	if err != nil {
+		responses.NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (h *Handler) GetUserTickets(ctx *gin.Context) {
+	param, err := strconv.Atoi(ctx.Query("id"))
+	if err != nil {
+		responses.NewErrorResponse(ctx, http.StatusBadRequest, ErrInvalidArguments)
+		return
+	}
+
+	id := int64(param)
+	tickets, err := h.services.Ticket.GetByUser(id)
+	if err != nil {
+		responses.NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+	ctx.JSON(http.StatusOK, tickets)
 }

@@ -40,3 +40,19 @@ func FlightAddToFlight(flight services.AddFlight) (models.Flight, error) {
 		},
 	}, nil
 }
+
+func BuyTicketToTicket(ticket services.BuyTicket) models.Ticket {
+	var t models.Ticket
+	t.Cost = ticket.Cost
+	t.Flight = make([]models.Flight, len(ticket.Flights))
+	for i, val := range ticket.Flights {
+		t.Flight[i] = models.Flight{
+			Id: val,
+		}
+	}
+
+	t.User = models.User{
+		PhoneNumber: ticket.PhoneNumber,
+	}
+	return t
+}
