@@ -1,10 +1,15 @@
 package bus
 
 import (
+	"errors"
 	"fmt"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/services"
 	"log/slog"
+)
+
+var (
+	ErrBusNotFound = errors.New("bus not found")
 )
 
 type Repo interface {
