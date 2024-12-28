@@ -46,7 +46,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	place := api.Group("/place")
 	{
 		place.POST("/add", h.AddPlace)
-		place.DELETE("/delete", h.DeletePlace)
+		place.DELETE("/:id", h.DeletePlace)
 		place.GET("/", h.GetAllPlaces)
 	}
 

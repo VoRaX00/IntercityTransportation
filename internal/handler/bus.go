@@ -12,10 +12,6 @@ import (
 	"unicode/utf8"
 )
 
-const (
-	ErrBusNotFound = "Bus not found"
-)
-
 type Bus interface {
 	Add(bus services.AddBus) error
 	Delete(stateNumber string) error
@@ -91,7 +87,7 @@ func (h *Handler) DeleteBus(ctx *gin.Context) {
 
 	if err := h.services.Bus.Delete(stateNumber); err != nil {
 		if errors.Is(err, bus.ErrBusNotFound) {
-			responses.NewErrorResponse(ctx, http.StatusNotFound, ErrBusNotFound)
+			responses.NewErrorResponse(ctx, http.StatusNotFound, ErrRecordNotFound)
 		}
 		responses.NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -119,7 +115,7 @@ func (h *Handler) GetBus(ctx *gin.Context) {
 	res, err := h.services.Bus.Get(stateNumber)
 	if err != nil {
 		if errors.Is(err, bus.ErrBusNotFound) {
-			responses.NewErrorResponse(ctx, http.StatusNotFound, ErrBusNotFound)
+			responses.NewErrorResponse(ctx, http.StatusNotFound, ErrRecordNotFound)
 			return
 		}
 		responses.NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())

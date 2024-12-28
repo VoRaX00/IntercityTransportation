@@ -1,12 +1,14 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/handler/responses"
 	"kursachDB/internal/services"
+	"kursachDB/internal/services/place"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -31,6 +33,10 @@ type Place interface {
 // @ID add-place
 // @Accept json
 // @Produce json
+// @Param input body services.AddPlace true "Place info for add"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
 // @Router /api/place/add [post]
 func (h *Handler) AddPlace(ctx *gin.Context) {
 	var input services.AddPlace
@@ -41,7 +47,7 @@ func (h *Handler) AddPlace(ctx *gin.Context) {
 
 	err := validateAddPlace(input)
 	if err != nil {
-		responses.NewErrorResponse(ctx, http.StatusBadRequest, ErrInvalidArguments)
+		responses.NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -82,7 +88,12 @@ func validateAddPlace(place services.AddPlace) error {
 // @ID delete-place
 // @Accept json
 // @Produce json
-// @Router /api/place/delete [delete]
+// @Param id path int64 true "ID of the place"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /api/place/{id} [delete]
 func (h *Handler) DeletePlace(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Query("id"))
 	if err != nil {
@@ -92,6 +103,10 @@ func (h *Handler) DeletePlace(ctx *gin.Context) {
 
 	err = h.services.Place.Delete(id)
 	if err != nil {
+		if errors.Is(err, place.ErrPlaceNotFound) {
+			responses.NewErrorResponse(ctx, http.StatusNotFound, ErrRecordNotFound)
+			return
+		}
 		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
 		return
 	}
@@ -109,6 +124,8 @@ func (h *Handler) DeletePlace(ctx *gin.Context) {
 // @ID get-all-places
 // @Accept json
 // @Produce json
+// @Success 200 {object} map[string]string
+// @Failure 500 {object} map[string]string
 // @Router /api/place/ [get]
 func (h *Handler) GetAllPlaces(ctx *gin.Context) {
 	res, err := h.services.Place.GetAll()

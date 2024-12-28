@@ -1,11 +1,16 @@
 package place
 
 import (
+	"errors"
 	"fmt"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/services"
 	"kursachDB/pkg/mapper"
 	"log/slog"
+)
+
+var (
+	ErrPlaceNotFound = errors.New("place not found")
 )
 
 type Repo interface {

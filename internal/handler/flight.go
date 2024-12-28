@@ -13,10 +13,6 @@ import (
 	"time"
 )
 
-const (
-	ErrFlightNotFound = "Flight not found"
-)
-
 type Flight interface {
 	Add(flight services.AddFlight) error
 	Delete(id int) error
@@ -96,7 +92,7 @@ func (h *Handler) DeleteFlight(ctx *gin.Context) {
 
 	if err = h.services.Flight.Delete(id); err != nil {
 		if errors.Is(err, flight.ErrFlightNotFound) {
-			responses.NewErrorResponse(ctx, http.StatusNotFound, ErrFlightNotFound)
+			responses.NewErrorResponse(ctx, http.StatusNotFound, ErrRecordNotFound)
 			return
 		}
 
