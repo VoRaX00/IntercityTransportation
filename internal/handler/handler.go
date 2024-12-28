@@ -53,7 +53,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	ticket := api.Group("/ticket")
 	{
 		ticket.POST("/buy", h.BuyTicket)
-		ticket.DELETE("remove-ticket", h.RemoveTicket)
+		ticket.DELETE("/:id", h.RemoveTicket)
 		ticket.GET("/", h.GetAllTickets)
 		ticket.GET("/user", h.GetUserTickets)
 	}

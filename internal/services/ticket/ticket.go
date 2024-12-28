@@ -1,11 +1,16 @@
 package ticket
 
 import (
+	"errors"
 	"fmt"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/services"
 	"kursachDB/pkg/mapper"
 	"log/slog"
+)
+
+var (
+	ErrNotFound = errors.New("ticket not found")
 )
 
 type Repo interface {
