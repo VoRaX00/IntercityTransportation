@@ -8,24 +8,28 @@ import (
 )
 
 type Auth interface {
-	SignIn(user models.User) error
+	Login(user models.User) error
 }
 
-// @Summary SignIn
+// @Summary Login
 // @Tags auth
 // @Description Login user
 // @ID login
 // @Accept json
 // @Produce json
-// @Router /auth/sign-in [post]
-func (h *Handler) SignIn(ctx *gin.Context) {
+// @Param input body models.User true "User info for login"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /auth/login [post]
+func (h *Handler) Login(ctx *gin.Context) {
 	var input models.User
 	if err := ctx.ShouldBind(&input); err != nil {
 		responses.NewErrorResponse(ctx, http.StatusBadRequest, ErrInvalidArguments)
 		return
 	}
 
-	err := h.services.Auth.SignIn(input)
+	err := h.services.Auth.Login(input)
 	if err != nil {
 		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
 	}
