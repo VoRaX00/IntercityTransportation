@@ -28,3 +28,9 @@ type BuyTicket struct {
 	Flights     []int64 `json:"flights"`
 	PhoneNumber int64   `json:"phoneNumber"`
 }
+
+type FlightFilter struct {
+	From        string `json:"from"`
+	To          string `json:"to"`
+	StateNumber string `json:"stateNumber"`
+}

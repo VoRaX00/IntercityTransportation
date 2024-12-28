@@ -1,11 +1,16 @@
 package flight
 
 import (
+	"errors"
 	"fmt"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/services"
 	"kursachDB/pkg/mapper"
 	"log/slog"
+)
+
+var (
+	ErrFlightNotFound = errors.New("flight not found")
 )
 
 type Repo interface {

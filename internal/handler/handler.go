@@ -39,7 +39,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	schedule := api.Group("/flight")
 	{
 		schedule.POST("/add", h.AddFlight)
-		schedule.DELETE("/delete", h.DeleteFlight)
+		schedule.DELETE("/:id", h.DeleteFlight)
 		schedule.GET("/", h.GetAllFlight)
 	}
 
