@@ -11,6 +11,8 @@ import (
 type Repo interface {
 	Add(ticket models.Ticket) error
 	Delete(phoneNumber int64) error
+	GetAll() ([]models.Ticket, error)
+	GetByUser(phoneNumber int64) ([]models.Ticket, error)
 }
 
 type Ticket struct {
@@ -59,8 +61,36 @@ func (s *Ticket) RemoveTicket(phoneNumber int64) error {
 }
 
 func (s *Ticket) GetAll() ([]models.Ticket, error) {
-	return nil, nil
+	const op = "Ticket.GetAll"
+	log := s.log.With(
+		slog.String("op", op),
+	)
+
+	log.Info("start getting tickets")
+	tickets, err := s.repo.GetAll()
+	if err != nil {
+		log.Error("failed to get tickets", err)
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	log.Info("finish getting tickets")
+
+	return tickets, nil
 }
+
 func (s *Ticket) GetByUser(phoneNumber int64) ([]models.Ticket, error) {
-	return nil, nil
+	const op = "Ticket.GetByUser"
+	log := s.log.With(
+		slog.String("op", op),
+		slog.Int64("phoneNumber", phoneNumber),
+	)
+
+	log.Info("start getting tickets")
+	tickets, err := s.repo.GetByUser(phoneNumber)
+	if err != nil {
+		log.Error("failed to get tickets", err)
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	log.Info("finish getting tickets")
+
+	return tickets, nil
 }
