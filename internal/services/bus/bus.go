@@ -15,6 +15,7 @@ var (
 type Repo interface {
 	Add(bus models.Bus) error
 	Delete(stateNumber string) error
+	Get(stateNumber string) (models.Bus, error)
 	GetAll() ([]models.Bus, error)
 }
 
@@ -67,6 +68,22 @@ func (s *Bus) Delete(stateNumber string) error {
 	}
 	log.Info("success deleted bus")
 	return nil
+}
+
+func (s *Bus) Get(stateNumber string) (models.Bus, error) {
+	const op = "bus.Get"
+	log := s.log.With(
+		slog.String("op", op),
+	)
+
+	log.Info("starting get bus")
+	bus, err := s.repo.Get(stateNumber)
+	if err != nil {
+		log.Warn("error getting bus", err)
+		return models.Bus{}, fmt.Errorf("%s: %w", op, err)
+	}
+	log.Info("success get bus")
+	return bus, nil
 }
 
 func (s *Bus) GetAll() ([]models.Bus, error) {

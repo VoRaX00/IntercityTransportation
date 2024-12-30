@@ -72,3 +72,21 @@ func (s *Bus) GetAll() ([]models.Bus, error) {
 	}
 	return buses, nil
 }
+
+func (s *Bus) Get(stateNumber string) (models.Bus, error) {
+	const op = "storage.bus.Get"
+
+	query := `
+	SELECT 
+		state_number, models.model, models.count_places
+	FROM buses
+	JOIN models ON buses.model = models.model
+	WHERE state_number = $1`
+
+	var bus models.Bus
+	err := s.db.Get(&bus, query, stateNumber)
+	if err != nil {
+		return bus, fmt.Errorf("%s: %w", op, err)
+	}
+	return bus, nil
+}

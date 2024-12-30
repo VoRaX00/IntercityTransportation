@@ -16,7 +16,7 @@ import (
 type Flight interface {
 	Add(flight services.AddFlight) error
 	Delete(id int) error
-	GetAll(filters services.FlightFilter) ([]models.Flight, error)
+	GetAll(filters services.AddFlight) ([]models.Flight, error)
 }
 
 // @Summary AddFlight
@@ -122,11 +122,15 @@ func (h *Handler) DeleteFlight(ctx *gin.Context) {
 func (h *Handler) GetAllFlight(ctx *gin.Context) {
 	from := ctx.Query("from")
 	to := ctx.Query("to")
+	departure := ctx.Query("departure")
+	arrival := ctx.Query("arrival")
 	stateNumber := ctx.Query("stateNumber")
 
-	filters := services.FlightFilter{
+	filters := services.AddFlight{
 		From:        from,
 		To:          to,
+		Departure:   departure,
+		Arrival:     arrival,
 		StateNumber: stateNumber,
 	}
 

@@ -22,7 +22,7 @@ func New(log *slog.Logger, repo Repo) *Auth {
 	}
 }
 
-func (s *Auth) SignIn(login models.User) error {
+func (s *Auth) Login(login models.User) error {
 	const op = "signIn"
 
 	log := s.log.With(
