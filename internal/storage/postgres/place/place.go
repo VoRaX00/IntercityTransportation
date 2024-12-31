@@ -1,6 +1,8 @@
 package place
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"kursachDB/internal/domain/models"
@@ -21,25 +23,31 @@ func (s *Place) Add(place models.Place) error {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
+	defer func() {
+		if p := recover(); p != nil {
+			_ = tx.Rollback()
+			panic(p)
+		} else if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
 	var typeId int64
 	query := `SELECT id FROM types_places WHERE type_place = $1`
-	row, err := tx.Query(query, place.Type.Type)
+	err = tx.QueryRow(query, place.Type.Type).Scan(&typeId)
 	if err != nil {
-		_ = tx.Rollback()
-		return fmt.Errorf("%s: %w", op, err)
-	}
-
-	if err = row.Scan(&typeId); err != nil {
-		_ = tx.Rollback()
+		if errors.Is(err, sql.ErrNoRows) {
+			return fmt.Errorf("%s: %w", op, err)
+		}
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
 	query = `INSERT INTO places (name_place, type_id) VALUES ($1, $2)`
 	_, err = tx.Exec(query, place.NamePlace, typeId)
 	if err != nil {
-		_ = tx.Rollback()
 		return fmt.Errorf("%s: %w", op, err)
 	}
+
 	if err = tx.Commit(); err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
@@ -52,11 +60,20 @@ func (s *Place) Delete(id int) error {
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
-	query := `DELETE FROM places WHERE id = $1`
 
+	defer func() {
+		if p := recover(); p != nil {
+			_ = tx.Rollback()
+			panic(p)
+		} else if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
+	query := `DELETE FROM places WHERE id = $1`
 	_, err = tx.Exec(query, id)
 	if err != nil {
-		_ = tx.Rollback()
+		return fmt.Errorf("%s: %w", op, err)
 	}
 
 	if err = tx.Commit(); err != nil {
@@ -68,16 +85,23 @@ func (s *Place) Delete(id int) error {
 func (s *Place) GetAll() ([]models.Place, error) {
 	const op = "storage.place.GetAll"
 	var places []models.Place
-	query := `SELECT 
-    	id, name_place, types_places.id, types_places.type_place
-		FROM places
-		JOIN types_places ON id = places.type_id`
+	query := `
+	SELECT 
+    	places.id AS id, 
+    	places.name_place AS name_place, 
+    	types_places.id AS "type.type_id", 
+    	types_places.type_place AS "type.type_place"
+	FROM 
+	    places
+	JOIN 
+		types_places 
+	ON 
+	    types_places.id = places.type_id`
 
-	rows, err := s.db.Query(query)
+	err := s.db.Select(&places, query)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 
-	// TODO: implemented
-	return nil, nil
+	return places, nil
 }
