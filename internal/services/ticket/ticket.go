@@ -15,7 +15,7 @@ var (
 
 type Repo interface {
 	Add(ticket models.Ticket) error
-	Delete(phoneNumber int64) error
+	Delete(id int64) error
 	GetAll() ([]models.Ticket, error)
 	GetByUser(phoneNumber int64) ([]models.Ticket, error)
 }
