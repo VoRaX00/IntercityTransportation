@@ -18,7 +18,7 @@ const (
 	envProd  = "prod"
 )
 
-// @Title KursachDB API
+// @Title Transportation API
 // @Version 1.0
 // @Description API for kursach
 // @Host localhost:7080

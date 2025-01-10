@@ -23,7 +23,7 @@ type DBConfig struct {
 	Port     int    `yaml:"port" env-required:"true"`
 	DBName   string `yaml:"db_name" env-required:"true"`
 	Password string `yaml:"-"`
-	User     string `yaml:"user" env-required:"true"`
+	User     string `yaml:"username" env-required:"true"`
 	SSLMode  string `yaml:"ssl_mode" env-required:"true"`
 }
 

@@ -912,7 +912,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:7080",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "KursachDB API",
+	Title:            "Transportation API",
 	Description:      "API for kursach",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

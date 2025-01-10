@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	_ "github.com/lib/pq"
 	"kursachDB/internal/app/server"
 	"kursachDB/internal/config"
 	"kursachDB/internal/handler"

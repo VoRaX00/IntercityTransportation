@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "API for kursach",
-        "title": "KursachDB API",
+        "title": "Transportation API",
         "contact": {},
         "version": "1.0"
     },

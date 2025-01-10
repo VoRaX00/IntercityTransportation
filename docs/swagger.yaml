@@ -109,7 +109,7 @@ host: localhost:7080
 info:
   contact: {}
   description: API for kursach
-  title: KursachDB API
+  title: Transportation API
   version: "1.0"
 paths:
   /api/bus:
