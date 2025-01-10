@@ -1,0 +1,595 @@
+basePath: /
+definitions:
+  models.Bus:
+    properties:
+      model:
+        $ref: '#/definitions/models.Model'
+      stateNumber:
+        type: string
+    type: object
+  models.Flight:
+    properties:
+      arrival:
+        type: string
+      bus:
+        $ref: '#/definitions/models.Bus'
+      departure:
+        type: string
+      from:
+        $ref: '#/definitions/models.Place'
+      id:
+        type: integer
+      to:
+        $ref: '#/definitions/models.Place'
+    type: object
+  models.Model:
+    properties:
+      countPlace:
+        type: integer
+      model:
+        type: string
+    type: object
+  models.Place:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      type:
+        $ref: '#/definitions/models.TypePlace'
+    type: object
+  models.Ticket:
+    properties:
+      cost:
+        type: integer
+      flights:
+        items:
+          $ref: '#/definitions/models.Flight'
+        type: array
+      id:
+        type: integer
+      user:
+        $ref: '#/definitions/models.User'
+    type: object
+  models.TypePlace:
+    properties:
+      id:
+        type: integer
+      type:
+        type: string
+    type: object
+  models.User:
+    properties:
+      fio:
+        type: string
+      phoneNumber:
+        type: integer
+    type: object
+  services.AddBus:
+    properties:
+      model:
+        type: string
+      stateNumber:
+        type: string
+    type: object
+  services.AddFlight:
+    properties:
+      arrival:
+        type: string
+      departure:
+        type: string
+      from:
+        type: string
+      stateNumber:
+        type: string
+      to:
+        type: string
+    type: object
+  services.AddPlace:
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+    required:
+    - name
+    type: object
+  services.BuyTicket:
+    properties:
+      cost:
+        type: integer
+      flights:
+        items:
+          type: integer
+        type: array
+      phoneNumber:
+        type: integer
+    type: object
+host: localhost:7080
+info:
+  contact: {}
+  description: API for kursach
+  title: KursachDB API
+  version: "1.0"
+paths:
+  /api/bus:
+    get:
+      consumes:
+      - application/json
+      operationId: get-all-bus
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Bus'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: GetAllBus
+      tags:
+      - bus
+  /api/bus/{stateNumber}:
+    delete:
+      consumes:
+      - application/json
+      operationId: delete-bus
+      parameters:
+      - description: State number of the bus
+        in: path
+        name: stateNumber
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: DeleteBus
+      tags:
+      - bus
+    get:
+      consumes:
+      - application/json
+      operationId: get-bus
+      parameters:
+      - description: State number of the bus
+        in: path
+        name: stateNumber
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: GetBus
+      tags:
+      - bus
+  /api/bus/add:
+    post:
+      consumes:
+      - application/json
+      description: Add bus
+      operationId: add-bus
+      parameters:
+      - description: Bus info to add
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.AddBus'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: AddBus
+      tags:
+      - bus
+  /api/flight:
+    get:
+      consumes:
+      - application/json
+      description: Get all flight
+      operationId: get-all-flight
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Flight'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: GetAllFlight
+      tags:
+      - flight
+  /api/flight/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete flight
+      operationId: delete-flight
+      parameters:
+      - description: Id of the flight
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: DeleteFlight
+      tags:
+      - flight
+  /api/flight/add:
+    post:
+      consumes:
+      - application/json
+      description: Add new flight
+      operationId: add-flight
+      parameters:
+      - description: Flight info for add
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.AddFlight'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: AddFlight
+      tags:
+      - flight
+  /api/place/:
+    get:
+      consumes:
+      - application/json
+      description: Get all places
+      operationId: get-all-places
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: GetAllPlaces
+      tags:
+      - place
+  /api/place/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete place
+      operationId: delete-place
+      parameters:
+      - description: ID of the place
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: DeletePlace
+      tags:
+      - place
+  /api/place/add:
+    post:
+      consumes:
+      - application/json
+      description: Add place
+      operationId: add-place
+      parameters:
+      - description: Place info for add
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.AddPlace'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: AddPlace
+      tags:
+      - place
+  /api/ticket:
+    get:
+      consumes:
+      - application/json
+      description: Get all tickets
+      operationId: get-all-tickets
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: GetAllTickets
+      tags:
+      - ticket
+  /api/ticket/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove ticket
+      operationId: remove-ticket
+      parameters:
+      - description: Id of the ticket
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: RemoveTicket
+      tags:
+      - ticket
+  /api/ticket/buy:
+    post:
+      consumes:
+      - application/json
+      description: Buy ticket
+      operationId: buy-ticket
+      parameters:
+      - description: Ticket info for add
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.BuyTicket'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: BuyTicket
+      tags:
+      - ticket
+  /api/ticket/user:
+    get:
+      consumes:
+      - application/json
+      description: Get user tickets
+      operationId: get-user-tickets
+      parameters:
+      - description: Phone number of the user
+        in: query
+        name: phoneNumber
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Ticket'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: GetUserTickets
+      tags:
+      - ticket
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login user
+      operationId: login
+      parameters:
+      - description: User info for login
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login
+      tags:
+      - auth
+swagger: "2.0"
