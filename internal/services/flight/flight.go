@@ -16,7 +16,7 @@ var (
 type Repo interface {
 	Add(flight models.Flight) error
 	Delete(id int) error
-	GetAll(flight models.Flight) ([]models.Flight, error)
+	GetAll() ([]models.Flight, error)
 }
 
 type Flight struct {
@@ -70,20 +70,14 @@ func (s *Flight) Delete(id int) error {
 	return nil
 }
 
-func (s *Flight) GetAll(filters services.AddFlight) ([]models.Flight, error) {
+func (s *Flight) GetAll() ([]models.Flight, error) {
 	const op = "Flight.GetAll"
 	log := s.log.With(
 		slog.String("op", op),
 	)
 
-	mapFilter, err := mapper.FlightAddToFlight(filters)
-	if err != nil {
-		log.Warn(err.Error())
-		return nil, fmt.Errorf("%s: %w", op, err)
-	}
-
 	log.Info("starting getting all flights")
-	flights, err := s.repo.GetAll(mapFilter)
+	flights, err := s.repo.GetAll()
 	if err != nil {
 		log.Warn("error getting all flights", err)
 		return nil, fmt.Errorf("%s: %w", op, err)

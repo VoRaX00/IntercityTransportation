@@ -16,7 +16,7 @@ import (
 type Flight interface {
 	Add(flight services.AddFlight) error
 	Delete(id int) error
-	GetAll(filters services.AddFlight) ([]models.Flight, error)
+	GetAll() ([]models.Flight, error)
 }
 
 // @Summary AddFlight
@@ -113,32 +113,14 @@ func (h *Handler) DeleteFlight(ctx *gin.Context) {
 // @ID get-all-flight
 // @Accept json
 // @Produce json
-// @Param from query string false "Name of the from"
-// @Param to query string false "Name of the to"
-// @Param stateNumber query string false "State number of the bus"
 // @Success 200 {array} models.Flight
 // @Failure 500 {object} map[string]string
 // @Router /api/flight [get]
 func (h *Handler) GetAllFlight(ctx *gin.Context) {
-	from := ctx.Query("from")
-	to := ctx.Query("to")
-	departure := ctx.Query("departure")
-	arrival := ctx.Query("arrival")
-	stateNumber := ctx.Query("stateNumber")
-
-	filters := services.AddFlight{
-		From:        from,
-		To:          to,
-		Departure:   departure,
-		Arrival:     arrival,
-		StateNumber: stateNumber,
-	}
-
-	res, err := h.services.Flight.GetAll(filters)
+	res, err := h.services.Flight.GetAll()
 	if err != nil {
 		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
 		return
 	}
-
 	ctx.JSON(http.StatusOK, res)
 }

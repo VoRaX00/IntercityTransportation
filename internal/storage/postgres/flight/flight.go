@@ -1,6 +1,7 @@
 package flight
 
 import (
+	"fmt"
 	"github.com/jmoiron/sqlx"
 	"kursachDB/internal/domain/models"
 )
@@ -16,13 +17,37 @@ func New(db *sqlx.DB) *Flight {
 }
 
 func (r *Flight) Add(flight models.Flight) error {
-	panic("implement me")
+	const op = `storage.flight.Add`
+	query := `INSERT INTO 
+    flights (from_id, to_id, departure, arrival, state_number)
+    VALUES ($1, $2, $3, $4, $5)`
+
+	_, err := r.db.Exec(query, flight.From.Id, flight.To.Id, flight.Departure, flight.Arrival, flight.Bus.StateNumber)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
 }
 
 func (r *Flight) Delete(id int) error {
-	panic("implement me")
+	const op = `storage.flight.Delete`
+	query := `DELETE FROM flights WHERE id = $1`
+	_, err := r.db.Exec(query, id)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
 }
 
 func (r *Flight) GetAll() ([]models.Flight, error) {
-	panic("implement me")
+	const op = `storage.flight.GetAll`
+	query := `SELECT 
+    id, from_id, to_id, departure, arrival, state_number
+    FROM flights`
+	var flights []models.Flight
+	err := r.db.Select(&flights, query)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	return flights, nil
 }
