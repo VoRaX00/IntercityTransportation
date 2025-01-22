@@ -136,40 +136,6 @@ paths:
       tags:
       - bus
   /api/bus/{stateNumber}:
-    delete:
-      consumes:
-      - application/json
-      operationId: delete-bus
-      parameters:
-      - description: State number of the bus
-        in: path
-        name: stateNumber
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: DeleteBus
-      tags:
-      - bus
     get:
       consumes:
       - application/json
@@ -265,48 +231,6 @@ paths:
       summary: GetAllFlight
       tags:
       - flight
-  /api/flight/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete flight
-      operationId: delete-flight
-      parameters:
-      - description: Id of the flight
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: DeleteFlight
-      tags:
-      - flight
   /api/flight/add:
     post:
       consumes:
@@ -366,48 +290,6 @@ paths:
               type: string
             type: object
       summary: GetAllPlaces
-      tags:
-      - place
-  /api/place/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete place
-      operationId: delete-place
-      parameters:
-      - description: ID of the place
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: DeletePlace
       tags:
       - place
   /api/place/add:

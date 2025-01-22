@@ -32,7 +32,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	transport := api.Group("/bus")
 	{
 		transport.POST("/add", h.AddBus)
-		transport.DELETE("/:stateNumber", h.DeleteBus)
 		transport.GET("/", h.GetAllBus)
 		transport.GET("/:stateNumber", h.GetBus)
 	}
@@ -40,14 +39,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	schedule := api.Group("/flight")
 	{
 		schedule.POST("/add", h.AddFlight)
-		schedule.DELETE("/:id", h.DeleteFlight)
 		schedule.GET("/", h.GetAllFlight)
 	}
 
 	place := api.Group("/place")
 	{
 		place.POST("/add", h.AddPlace)
-		place.DELETE("/:id", h.DeletePlace)
 		place.GET("/", h.GetAllPlaces)
 	}
 

@@ -8,7 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
-	_ "kursachDB/migrations" // Подключение пакета с миграциями
+	_ "kursachDB/migrations"
 	"os"
 )
 
@@ -31,6 +31,8 @@ func main() {
 		fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
 			cfg.Host, cfg.Port, cfg.User, os.Getenv("DB_PASSWORD"), cfg.DBName, cfg.SSLMode))
 
+	defer db.Close()
+
 	if err != nil {
 		panic(err)
 	}
@@ -40,7 +42,7 @@ func main() {
 	flag.Parse()
 
 	if cfg.IsDrop {
-		if err = goose.Down(db.DB, migrationsPath); err != nil {
+		if err = goose.DownTo(db.DB, migrationsPath, 0); err != nil {
 			panic(err)
 		}
 	}

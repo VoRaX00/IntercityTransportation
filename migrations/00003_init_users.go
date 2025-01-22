@@ -12,7 +12,7 @@ func init() {
 
 func UpUsers(ctx context.Context, tx *sql.Tx) error {
 	query := `CREATE TABLE IF NOT EXISTS users (
-    	phone_number INTEGER PRIMARY KEY,
+    	phone_number BIGINT PRIMARY KEY,
     	fio TEXT NOT NULL
 	);`
 	_, err := tx.ExecContext(ctx, query)

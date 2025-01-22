@@ -32,6 +32,7 @@ func (h *Handler) Login(ctx *gin.Context) {
 	err := h.services.Auth.Login(input)
 	if err != nil {
 		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{

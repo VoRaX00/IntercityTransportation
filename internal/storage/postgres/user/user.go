@@ -23,8 +23,8 @@ func (u *User) Login(user models.User) error {
 	_, err := u.Get(user)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			query := `INSERT INTO user (phone_number, fio) VALUES ($1, $2)`
-			_, err = u.db.Query(query, user.PhoneNumber, user.FIO)
+			query := `INSERT INTO users (phone_number, fio) VALUES ($1, $2) ON CONFLICT (phone_number) DO NOTHING`
+			_, err = u.db.Exec(query, user.PhoneNumber, user.FIO)
 			if err != nil {
 				return fmt.Errorf("%s: %w", op, err)
 			}
@@ -37,15 +37,18 @@ func (u *User) Login(user models.User) error {
 
 func (u *User) Get(user models.User) (models.User, error) {
 	const op = "postgres.user.Get"
-	query := `SELECT phone_number, fio FROM user WHERE phone_number = $1`
+	query := `SELECT phone_number, fio FROM users WHERE phone_number = $1`
 	var res models.User
 	err := u.db.Get(&res, query, user.PhoneNumber)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return models.User{}, err
+		}
 		return models.User{}, fmt.Errorf("%s: %w", op, err)
 	}
 
 	if res.FIO != user.FIO {
-		return models.User{}, fmt.Errorf("%s: %w", op, fmt.Errorf("%s: %w", op, "FIO does not match"))
+		return models.User{}, fmt.Errorf("%s: FIO does not match", op)
 	}
 	return res, nil
 }
