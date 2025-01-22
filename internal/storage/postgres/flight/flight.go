@@ -29,16 +29,6 @@ func (r *Flight) Add(flight models.Flight) error {
 	return nil
 }
 
-func (r *Flight) Delete(id int) error {
-	const op = `storage.flight.Delete`
-	query := `DELETE FROM flights WHERE id = $1`
-	_, err := r.db.Exec(query, id)
-	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
-	}
-	return nil
-}
-
 func (r *Flight) GetAll() ([]models.Flight, error) {
 	const op = `storage.flight.GetAll`
 	query := `SELECT 

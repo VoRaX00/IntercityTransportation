@@ -1,17 +1,14 @@
 package handler
 
 import (
-	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/handler/responses"
 	"kursachDB/internal/services"
-	"kursachDB/internal/services/place"
 	"net/http"
 	"regexp"
-	"strconv"
 )
 
 const (
@@ -23,7 +20,6 @@ const (
 
 type Place interface {
 	Add(place services.AddPlace) error
-	Delete(id int) error
 	GetAll() ([]models.Place, error)
 }
 
@@ -80,42 +76,6 @@ func validateAddPlace(place services.AddPlace) error {
 		return fmt.Errorf("wrong name place")
 	}
 	return nil
-}
-
-// @Summary DeletePlace
-// @Tags place
-// @Description Delete place
-// @ID delete-place
-// @Accept json
-// @Produce json
-// @Param id path int64 true "ID of the place"
-// @Success 200 {object} map[string]string
-// @Failure 400 {object} map[string]string
-// @Failure 404 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /api/place/{id} [delete]
-func (h *Handler) DeletePlace(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Query("id"))
-	if err != nil {
-		responses.NewErrorResponse(ctx, http.StatusBadRequest, ErrInvalidArguments)
-		return
-	}
-
-	err = h.services.Place.Delete(id)
-	if err != nil {
-		if errors.Is(err, place.ErrPlaceNotFound) {
-			responses.NewErrorResponse(ctx, http.StatusNotFound, ErrRecordNotFound)
-			return
-		}
-		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
-		return
-	}
-
-	ctx.JSON(http.StatusOK,
-		gin.H{
-			"status": "success",
-		},
-	)
 }
 
 // @Summary GetAllPlaces

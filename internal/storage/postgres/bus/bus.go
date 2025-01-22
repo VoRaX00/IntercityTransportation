@@ -45,17 +45,6 @@ func insertModels(tx *sqlx.Tx, models models.Model) error {
 	return nil
 }
 
-func (s *Bus) Delete(stateNumber string) error {
-	const op = "storage.bus.Delete"
-	query := `DELETE FROM buses WHERE state_number = $1`
-
-	_, err := s.db.Exec(query, stateNumber)
-	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
-	}
-	return nil
-}
-
 func (s *Bus) GetAll() ([]models.Bus, error) {
 	const op = "storage.bus.GetAll"
 

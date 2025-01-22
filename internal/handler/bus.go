@@ -14,7 +14,6 @@ import (
 
 type Bus interface {
 	Add(bus services.AddBus) error
-	Delete(stateNumber string) error
 	GetAll() ([]models.Bus, error)
 	Get(stateNumber string) (models.Bus, error)
 }
@@ -70,33 +69,6 @@ func validateAddBus(bus services.AddBus) error {
 		}
 	}
 	return nil
-}
-
-// @Summary DeleteBus
-// @Tags bus
-// @ID delete-bus
-// @Accept json
-// @Produce json
-// @Param stateNumber path string true "State number of the bus"
-// @Success 200 {object} map[string]string
-// @Failure 404 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /api/bus/{stateNumber} [delete]
-func (h *Handler) DeleteBus(ctx *gin.Context) {
-	stateNumber := ctx.Param("stateNumber")
-
-	if err := h.services.Bus.Delete(stateNumber); err != nil {
-		if errors.Is(err, bus.ErrBusNotFound) {
-			responses.NewErrorResponse(ctx, http.StatusNotFound, ErrRecordNotFound)
-		}
-		responses.NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"status":      "success",
-		"stateNumber": stateNumber,
-	})
 }
 
 // @Summary GetBus

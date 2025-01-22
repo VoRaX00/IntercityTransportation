@@ -17,7 +17,7 @@ func New(db *sqlx.DB) *Ticket {
 }
 
 func (r *Ticket) Add(ticket models.Ticket) error {
-	const op = "storage.ticket.Add"
+	const op = "postgres.ticket.Add"
 	query := `INSERT INTO tickets (cost, phone_number) VALUES ($1, $2)`
 	_, err := r.db.Exec(query, ticket.Cost, ticket.User.PhoneNumber)
 	if err != nil {
@@ -27,7 +27,7 @@ func (r *Ticket) Add(ticket models.Ticket) error {
 }
 
 func (r *Ticket) Delete(id int64) error {
-	const op = "storage.ticket.Delete"
+	const op = "postgres.ticket.Delete"
 	query := `DELETE FROM tickets WHERE id = $1`
 	_, err := r.db.Exec(query, id)
 	if err != nil {

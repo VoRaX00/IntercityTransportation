@@ -15,7 +15,6 @@ var (
 
 type Repo interface {
 	Add(flight models.Flight) error
-	Delete(id int) error
 	GetAll() ([]models.Flight, error)
 }
 
@@ -51,22 +50,6 @@ func (s *Flight) Add(flight services.AddFlight) error {
 	}
 	log.Info("finishing adding flight")
 
-	return nil
-}
-
-func (s *Flight) Delete(id int) error {
-	const op = "Flight.Delete"
-	log := s.log.With(
-		slog.String("op", op),
-	)
-
-	log.Info("starting deleting flight")
-	err := s.repo.Delete(id)
-	if err != nil {
-		log.Warn("error deleting", err)
-		return fmt.Errorf("%s: %w", op, err)
-	}
-	log.Info("finishing deleting flight")
 	return nil
 }
 

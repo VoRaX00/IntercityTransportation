@@ -15,7 +15,6 @@ var (
 
 type Repo interface {
 	Add(place models.Place) error
-	Delete(id int) error
 	GetAll() ([]models.Place, error)
 }
 
@@ -46,23 +45,6 @@ func (s *Place) Add(place services.AddPlace) error {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 	log.Info("place added")
-	return nil
-}
-
-func (s *Place) Delete(id int) error {
-	const op = "Place.Delete"
-	log := s.log.With(
-		slog.String("op", op),
-	)
-
-	log.Info("starting deleting place")
-	err := s.repo.Delete(id)
-	if err != nil {
-		log.Warn("failed to delete place")
-		return fmt.Errorf("%s: %w", op, err)
-	}
-	log.Info("place deleted")
-
 	return nil
 }
 

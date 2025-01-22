@@ -54,34 +54,6 @@ func (s *Place) Add(place models.Place) error {
 	return nil
 }
 
-func (s *Place) Delete(id int) error {
-	const op = "storage.place.Delete"
-	tx, err := s.db.Beginx()
-	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
-	}
-
-	defer func() {
-		if p := recover(); p != nil {
-			_ = tx.Rollback()
-			panic(p)
-		} else if err != nil {
-			_ = tx.Rollback()
-		}
-	}()
-
-	query := `DELETE FROM places WHERE id = $1`
-	_, err = tx.Exec(query, id)
-	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
-	}
-
-	if err = tx.Commit(); err != nil {
-		return fmt.Errorf("%s: %w", op, err)
-	}
-	return nil
-}
-
 func (s *Place) GetAll() ([]models.Place, error) {
 	const op = "storage.place.GetAll"
 	var places []models.Place

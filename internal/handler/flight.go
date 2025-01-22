@@ -1,21 +1,17 @@
 package handler
 
 import (
-	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/handler/responses"
 	"kursachDB/internal/services"
-	"kursachDB/internal/services/flight"
 	"net/http"
-	"strconv"
 	"time"
 )
 
 type Flight interface {
 	Add(flight services.AddFlight) error
-	Delete(id int) error
 	GetAll() ([]models.Flight, error)
 }
 
@@ -69,42 +65,6 @@ func validateAddFlight(flight services.AddFlight) error {
 		return fmt.Errorf("departure date is wrong")
 	}
 	return nil
-}
-
-// @Summary DeleteFlight
-// @Tags flight
-// @Description Delete flight
-// @ID delete-flight
-// @Accept json
-// @Produce json
-// @Param id path int64 true "Id of the flight"
-// @Success 200 {object} map[string]string
-// @Failure 400 {object} map[string]string
-// @Failure 404 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /api/flight/{id} [delete]
-func (h *Handler) DeleteFlight(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		responses.NewErrorResponse(ctx, http.StatusBadRequest, ErrInvalidArguments)
-		return
-	}
-
-	if err = h.services.Flight.Delete(id); err != nil {
-		if errors.Is(err, flight.ErrFlightNotFound) {
-			responses.NewErrorResponse(ctx, http.StatusNotFound, ErrRecordNotFound)
-			return
-		}
-
-		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
-		return
-	}
-
-	ctx.JSON(http.StatusOK,
-		gin.H{
-			"status": "success",
-		},
-	)
 }
 
 // @Summary GetAllFlight

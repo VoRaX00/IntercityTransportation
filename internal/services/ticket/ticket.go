@@ -33,7 +33,7 @@ func New(log *slog.Logger, repo Repo) *Ticket {
 }
 
 func (s *Ticket) BuyTicket(ticket services.BuyTicket) error {
-	const op = "Ticket.Create"
+	const op = "ticket.Create"
 	log := s.log.With(
 		slog.String("op", op),
 	)
@@ -50,7 +50,7 @@ func (s *Ticket) BuyTicket(ticket services.BuyTicket) error {
 }
 
 func (s *Ticket) RemoveTicket(phoneNumber int64) error {
-	const op = "Ticket.Create"
+	const op = "ticket.Create"
 	log := s.log.With(
 		slog.String("op", op),
 	)
@@ -66,7 +66,7 @@ func (s *Ticket) RemoveTicket(phoneNumber int64) error {
 }
 
 func (s *Ticket) GetAll() ([]models.Ticket, error) {
-	const op = "Ticket.GetAll"
+	const op = "ticket.GetAll"
 	log := s.log.With(
 		slog.String("op", op),
 	)
@@ -83,7 +83,7 @@ func (s *Ticket) GetAll() ([]models.Ticket, error) {
 }
 
 func (s *Ticket) GetByUser(phoneNumber int64) ([]models.Ticket, error) {
-	const op = "Ticket.GetByUser"
+	const op = "ticket.GetByUser"
 	log := s.log.With(
 		slog.String("op", op),
 		slog.Int64("phoneNumber", phoneNumber),
