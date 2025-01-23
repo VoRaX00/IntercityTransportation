@@ -4,7 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/handler/responses"
+	"kursachDB/pkg/jwt"
 	"net/http"
+	"time"
 )
 
 type Auth interface {
@@ -30,6 +32,29 @@ func (h *Handler) Login(ctx *gin.Context) {
 	}
 
 	token, err := h.services.Auth.Login(input)
+	if err != nil {
+		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status": "success",
+		"token":  token,
+	})
+}
+
+// @Summary LoginAdmin
+// @Tags auth
+// @Description Login admin
+// @ID login-admin
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /auth/loginAdmin [post]
+func (h *Handler) LoginAdmin(ctx *gin.Context) {
+	token, err := jwt.NewToken(models.User{FIO: "admin"}, time.Hour*24)
 	if err != nil {
 		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
 		return

@@ -59,7 +59,9 @@ func (r *Flight) GetAll() ([]models.Flight, error) {
 	query := `SELECT 
     f.id,
     p_from.id AS "places.id",
-    p_to.id AS "to_places.id",  
+    p_from.name_place AS "places.name_place",
+    p_to.id AS "to_places.id",
+    p_to.name_place AS "to_places.name_place",
     departure, arrival,
     b.state_number AS "buses.state_number"
     FROM flights f

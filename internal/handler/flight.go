@@ -61,7 +61,7 @@ func validateAddFlight(flight services.AddFlight) error {
 		return fmt.Errorf("arrival date format is wrong")
 	}
 
-	if departure.Before(arrival) {
+	if departure.After(arrival) {
 		return fmt.Errorf("departure date is wrong")
 	}
 	return nil

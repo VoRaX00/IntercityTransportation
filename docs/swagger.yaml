@@ -439,6 +439,36 @@ paths:
       summary: GetUserTickets
       tags:
       - ticket
+  /api/users:
+    get:
+      consumes:
+      - application/json
+      description: Get all users
+      operationId: users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: GetAllUsers
+      tags:
+      - users
   /auth/login:
     post:
       consumes:
@@ -474,6 +504,36 @@ paths:
               type: string
             type: object
       summary: Login
+      tags:
+      - auth
+  /auth/loginAdmin:
+    post:
+      consumes:
+      - application/json
+      description: Login admin
+      operationId: login-admin
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: LoginAdmin
       tags:
       - auth
 swagger: "2.0"
