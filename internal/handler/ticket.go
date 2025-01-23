@@ -38,7 +38,7 @@ func (h *Handler) BuyTicket(ctx *gin.Context) {
 
 	err := h.services.Ticket.BuyTicket(input)
 	if err != nil {
-		responses.NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
 		return
 	}
 

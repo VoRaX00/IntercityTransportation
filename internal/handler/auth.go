@@ -8,7 +8,7 @@ import (
 )
 
 type Auth interface {
-	Login(user models.User) error
+	Login(user models.User) (string, error)
 }
 
 // @Summary Login
@@ -29,7 +29,7 @@ func (h *Handler) Login(ctx *gin.Context) {
 		return
 	}
 
-	err := h.services.Auth.Login(input)
+	token, err := h.services.Auth.Login(input)
 	if err != nil {
 		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
 		return
@@ -37,5 +37,6 @@ func (h *Handler) Login(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": "success",
+		"token":  token,
 	})
 }

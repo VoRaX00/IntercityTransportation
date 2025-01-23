@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/services"
+	"strings"
 	"time"
 )
 
@@ -17,12 +18,14 @@ func PlaceAddToPlace(place services.AddPlace) models.Place {
 }
 
 func FlightAddToFlight(flight services.AddFlight) (models.Flight, error) {
-	departure, err := time.Parse("02.01.2006", flight.Departure)
+	flight.Departure = strings.TrimSpace(flight.Departure)
+	flight.Arrival = strings.TrimSpace(flight.Arrival)
+	departure, err := time.Parse("02.01.2006 15:04", flight.Departure)
 	if err != nil {
 		return models.Flight{}, fmt.Errorf("wrong departure")
 	}
 
-	arrival, err := time.Parse("02.01.2006", flight.Arrival)
+	arrival, err := time.Parse("02.01.2006 15:04", flight.Arrival)
 	if err != nil {
 		return models.Flight{}, fmt.Errorf("wrong arrival")
 	}

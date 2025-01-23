@@ -3,7 +3,9 @@ package auth
 import (
 	"fmt"
 	"kursachDB/internal/domain/models"
+	"kursachDB/pkg/jwt"
 	"log/slog"
+	"time"
 )
 
 type Repo interface {
@@ -22,7 +24,7 @@ func New(log *slog.Logger, repo Repo) *Auth {
 	}
 }
 
-func (s *Auth) Login(login models.User) error {
+func (s *Auth) Login(login models.User) (string, error) {
 	const op = "signIn"
 
 	log := s.log.With(
@@ -33,8 +35,17 @@ func (s *Auth) Login(login models.User) error {
 	err := s.repo.Login(login)
 	if err != nil {
 		log.Warn("error login", err)
-		return fmt.Errorf("%s: %w", op, err)
+		return "", fmt.Errorf("%s: %w", op, err)
 	}
 	log.Info("login verified")
-	return nil
+
+	log.Info("creating jwt")
+	token, err := jwt.NewToken(login, time.Hour*24)
+	if err != nil {
+		log.Warn("error creating jwt", err)
+		return "", fmt.Errorf("%s: %w", op, err)
+	}
+	log.Info("jwt created")
+
+	return token, nil
 }

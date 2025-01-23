@@ -32,6 +32,17 @@ func (s *Place) Add(place models.Place) error {
 		}
 	}()
 
+	exists, err := existsType(tx, place.Type.Type)
+	if !exists {
+		if err != nil {
+			return fmt.Errorf("%s: %w", op, err)
+		}
+		err = insertType(tx, place)
+		if err != nil {
+			return fmt.Errorf("%s: %w", op, err)
+		}
+	}
+
 	var typeId int64
 	query := `SELECT id FROM types_places WHERE type_place = $1`
 	err = tx.QueryRow(query, place.Type.Type).Scan(&typeId)
@@ -50,6 +61,28 @@ func (s *Place) Add(place models.Place) error {
 
 	if err = tx.Commit(); err != nil {
 		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
+}
+
+func existsType(tx *sqlx.Tx, typePlace string) (bool, error) {
+	query := `SELECT EXISTS (SELECT 1 FROM types_places WHERE type_place = $1)`
+	var exists bool
+	err := tx.QueryRow(query, typePlace).Scan(&exists)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return false, nil
+		}
+		return false, fmt.Errorf("%s: %w", query, err)
+	}
+	return exists, nil
+}
+
+func insertType(tx *sqlx.Tx, place models.Place) error {
+	query := `INSERT INTO types_places (type_place) VALUES ($1)`
+	_, err := tx.Exec(query, place.Type.Type)
+	if err != nil {
+		return fmt.Errorf("%s: %w", query, err)
 	}
 	return nil
 }

@@ -51,17 +51,17 @@ func (h *Handler) AddFlight(ctx *gin.Context) {
 }
 
 func validateAddFlight(flight services.AddFlight) error {
-	departure, err := time.Parse("02.01.2006", flight.Departure)
+	departure, err := time.Parse("02.01.2006 15:04", flight.Departure)
 	if err != nil {
 		return fmt.Errorf("departure date format is wrong")
 	}
 
-	arrival, err := time.Parse("02.01.2006", flight.Arrival)
+	arrival, err := time.Parse("02.01.2006 15:04", flight.Arrival)
 	if err != nil {
 		return fmt.Errorf("arrival date format is wrong")
 	}
 
-	if departure.After(arrival) {
+	if departure.Before(arrival) {
 		return fmt.Errorf("departure date is wrong")
 	}
 	return nil

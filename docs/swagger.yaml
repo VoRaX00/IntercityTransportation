@@ -67,6 +67,8 @@ definitions:
     type: object
   services.AddBus:
     properties:
+      countPlace:
+        type: integer
       model:
         type: string
       stateNumber:

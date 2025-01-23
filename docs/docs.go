@@ -667,6 +667,9 @@ const docTemplate = `{
         "services.AddBus": {
             "type": "object",
             "properties": {
+                "countPlace": {
+                    "type": "integer"
+                },
                 "model": {
                     "type": "string"
                 },

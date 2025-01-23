@@ -39,7 +39,8 @@ func (s *Bus) Add(bus services.AddBus) error {
 	param := models.Bus{
 		StateNumber: bus.StateNumber,
 		Model: models.Model{
-			Model: bus.Model,
+			Model:      bus.Model,
+			CountPlace: bus.CountPlace,
 		},
 	}
 

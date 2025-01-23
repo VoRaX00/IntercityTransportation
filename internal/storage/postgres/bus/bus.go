@@ -1,6 +1,8 @@
 package bus
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"kursachDB/internal/domain/models"
@@ -21,9 +23,18 @@ func (s *Bus) Add(bus models.Bus) error {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	err = insertModels(tx, bus.Model)
-	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+	if bus.Model.CountPlace != 0 {
+		err = insertModels(tx, bus.Model)
+		if err != nil {
+			return fmt.Errorf("%s: %w", op, err)
+		}
+	} else {
+		if exists, err := existsModel(tx, bus.Model); !exists {
+			if err != nil {
+				return fmt.Errorf("%s: %w", op, err)
+			}
+			return fmt.Errorf("%s: %w", op, "Not found model")
+		}
 	}
 
 	query := `INSERT INTO buses (state_number, model) VALUES ($1, $2)`
@@ -36,13 +47,26 @@ func (s *Bus) Add(bus models.Bus) error {
 	return tx.Commit()
 }
 
-func insertModels(tx *sqlx.Tx, models models.Model) error {
+func insertModels(tx *sqlx.Tx, model models.Model) error {
 	query := `INSERT INTO models (model, count_places) VALUES ($1, $2) ON CONFLICT DO NOTHING`
-	_, err := tx.Exec(query, models)
+	_, err := tx.Exec(query, model.Model, model.CountPlace)
 	if err != nil {
 		return fmt.Errorf("%s: %w", query, err)
 	}
 	return nil
+}
+
+func existsModel(tx *sqlx.Tx, model models.Model) (bool, error) {
+	query := `SELECT EXISTS (SELECT 1 FROM models WHERE model = $1)`
+	var exists bool
+	err := tx.QueryRow(query, model.Model).Scan(&exists)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return false, nil
+		}
+		return false, fmt.Errorf("%s: %w", query, err)
+	}
+	return exists, nil
 }
 
 func (s *Bus) GetAll() ([]models.Bus, error) {
@@ -50,9 +74,9 @@ func (s *Bus) GetAll() ([]models.Bus, error) {
 
 	query := `
 	SELECT
-    	buses.state_number, buses.model, models.count_places
+    	buses.state_number, m.model AS "models.model", m.count_places AS "models.count_places"
 	FROM buses
-	JOIN models ON buses.model = models.model`
+	JOIN models m ON buses.model = m.model`
 
 	var buses []models.Bus
 	err := s.db.Select(&buses, query)
@@ -67,9 +91,9 @@ func (s *Bus) Get(stateNumber string) (models.Bus, error) {
 
 	query := `
 	SELECT 
-		state_number, models.model, models.count_places
+		state_number, m.model AS "models.model", m.count_places AS "models.count_places"
 	FROM buses
-	JOIN models ON buses.model = models.model
+	JOIN models m ON buses.model = m.model
 	WHERE state_number = $1`
 
 	var bus models.Bus

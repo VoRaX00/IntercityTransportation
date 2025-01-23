@@ -13,7 +13,7 @@ func init() {
 func UpPlaces(ctx context.Context, tx *sql.Tx) error {
 	query := `CREATE TABLE IF NOT EXISTS places(
     	id SERIAL PRIMARY KEY,
-    	name_place TEXT NOT NULL,
+    	name_place TEXT UNIQUE NOT NULL,
     	type_id INTEGER REFERENCES types_places(id) NOT NULL
 	);`
 

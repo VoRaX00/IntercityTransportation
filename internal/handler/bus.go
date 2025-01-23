@@ -38,12 +38,12 @@ func (h *Handler) AddBus(ctx *gin.Context) {
 
 	err := validateAddBus(input)
 	if err != nil {
-		responses.NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		responses.NewErrorResponse(ctx, http.StatusBadRequest, ErrInvalidArguments)
 		return
 	}
 
 	if err = h.services.Bus.Add(input); err != nil {
-		responses.NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrAlreadyExists)
 		return
 	}
 
@@ -60,12 +60,16 @@ func validateAddBus(bus services.AddBus) error {
 	}
 
 	for i, val := range bus.StateNumber {
-		if (i == 0 || i > 3) && (val < '0' || val > '9') {
-			return fmt.Errorf("invalid state number")
+		if i >= 1 && i < 4 {
+			if val < '0' || val > '9' {
+				return fmt.Errorf("invalid state number")
+			}
 		}
 
-		if i > 0 && i < 4 && (val < 'A' || val > 'Z') {
-			return fmt.Errorf("invalid state number")
+		if i == 0 || i >= 4 {
+			if val < 'A' || val > 'Z' {
+				return fmt.Errorf("invalid state number")
+			}
 		}
 	}
 	return nil
@@ -90,7 +94,7 @@ func (h *Handler) GetBus(ctx *gin.Context) {
 			responses.NewErrorResponse(ctx, http.StatusNotFound, ErrRecordNotFound)
 			return
 		}
-		responses.NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
 		return
 	}
 

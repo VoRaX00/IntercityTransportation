@@ -44,6 +44,7 @@ func (s *Ticket) BuyTicket(ticket services.BuyTicket) error {
 	err := s.repo.Add(tick)
 	if err != nil {
 		log.Warn("failed to add ticket", err)
+		return fmt.Errorf("%s: %w", op, err)
 	}
 	log.Info("finish creating ticket")
 	return nil

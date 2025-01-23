@@ -21,6 +21,7 @@ type AddFlight struct {
 type AddBus struct {
 	StateNumber string `json:"stateNumber"`
 	Model       string `json:"model"`
+	CountPlace  int    `json:"countPlace,omitempty"`
 }
 
 type BuyTicket struct {
