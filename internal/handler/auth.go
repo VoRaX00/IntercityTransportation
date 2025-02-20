@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	_ "github.com/vektra/mockery"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/handler/responses"
@@ -33,6 +34,12 @@ func (h *Handler) Login(ctx *gin.Context) {
 		return
 	}
 
+	isValid := h.validateLogin(input)
+	if !isValid {
+		responses.NewErrorResponse(ctx, http.StatusBadRequest, ErrInvalidArguments)
+		return
+	}
+
 	token, err := h.services.Auth.Login(input)
 	if err != nil {
 		responses.NewErrorResponse(ctx, http.StatusInternalServerError, ErrInternalServer)
@@ -43,6 +50,25 @@ func (h *Handler) Login(ctx *gin.Context) {
 		"status": "success",
 		"token":  token,
 	})
+}
+
+func (h *Handler) validateLogin(user models.User) bool {
+	validate := validator.New()
+	err := validate.RegisterValidation("fullname", models.FullNameValidator)
+	if err != nil {
+		return false
+	}
+
+	err = validate.RegisterValidation("phone", models.PhoneValidator)
+	if err != nil {
+		return false
+	}
+
+	err = validate.Struct(user)
+	if err != nil {
+		return false
+	}
+	return true
 }
 
 // @Summary LoginAdmin
