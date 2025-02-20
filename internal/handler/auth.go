@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	_ "github.com/vektra/mockery"
 	"kursachDB/internal/domain/models"
 	"kursachDB/internal/handler/responses"
 	"kursachDB/pkg/jwt"
@@ -9,6 +10,7 @@ import (
 	"time"
 )
 
+//go:generate mockery --name=Auth --output=./mocks --case=underscore
 type Auth interface {
 	Login(user models.User) (string, error)
 }

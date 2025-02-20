@@ -1,0 +1,10 @@
+server:
+  port: 7080
+  timeout: "10h"
+db:
+  host: "localhost"
+  port: 7483
+  db_name: "kursach_db"
+  username: "postgres"
+  ssl_mode: "disable"
+env: "local"

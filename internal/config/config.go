@@ -48,6 +48,26 @@ func MustConfig() Config {
 	return config
 }
 
+func MustConfigPath(path string) Config {
+	if path == "" {
+		panic("config file path is empty")
+	}
+
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		panic("config file not found")
+	}
+
+	var config Config
+	err := cleanenv.ReadConfig(path, &config)
+	if err != nil {
+		panic(err)
+	}
+
+	password := os.Getenv("DB_PASSWORD")
+	config.DB.Password = password
+	return config
+}
+
 func fetchConfigPath() string {
 	var path string
 	flag.StringVar(&path, "config", "", "path to config file")

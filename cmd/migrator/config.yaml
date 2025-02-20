@@ -1,7 +1,6 @@
-
 host: "localhost"
 port: 7483
 db_name: "kursach_db"
 username: "postgres"
 ssl_mode: "disable"
-is_drop: true
+is_drop: false
